@@ -183,7 +183,11 @@ function addItemForm() {
         <label>日幣原價 ¥</label>
         <input type="number" id="jpy-${i}" placeholder="如：1500">
       </div>
-      <div class="form-group full">
+      <div class="form-group">
+        <label>廠商/品牌</label>
+        <input type="text" id="vendor-${i}" placeholder="如：生日城、西松屋">
+      </div>
+      <div class="form-group">
         <label>備註</label>
         <input type="text" id="note-${i}" placeholder="特殊需求">
       </div>
@@ -224,6 +228,7 @@ function getItems() {
       idx: i, name, qty: parseInt(qty),
       size: document.getElementById(`size-${i}`)?.value.trim() || '',
       price_jpy: parseFloat(document.getElementById(`jpy-${i}`)?.value) || 0,
+      vendor: document.getElementById(`vendor-${i}`)?.value.trim() || '',
       note: document.getElementById(`note-${i}`)?.value.trim() || '',
       image: itemImages[i] || null,
     });
@@ -252,6 +257,7 @@ function goConfirm() {
             ${it.size ? `<span>尺寸與規格：${esc(it.size)}</span>` : ''}
             <span>數量：${it.qty}</span>
             ${it.price_jpy ? `<span>日幣原價：¥${it.price_jpy.toLocaleString()}</span>` : ''}
+            ${it.vendor ? `<span>廠商/品牌：${esc(it.vendor)}</span>` : ''}
             ${it.note ? `<span>備註：${esc(it.note)}</span>` : ''}
           </div>
         </div>
@@ -292,7 +298,7 @@ async function submitOrder() {
         image_url = urlData.publicUrl;
       }
     }
-    await sb.from('order_items').insert([{ customer_id: customer.id, order_no, name: it.name, size: it.size, qty: it.qty, price_jpy: it.price_jpy, note: it.note, image_url }]);
+    await sb.from('order_items').insert([{ customer_id: customer.id, order_no, name: it.name, size: it.size, qty: it.qty, price_jpy: it.price_jpy, vendor: it.vendor||'', note: it.note, image_url }]);
   }
   document.getElementById('done-order-no').textContent = `訂單編號：${order_no}`;
   document.getElementById('stage-confirm').style.display = 'none';
