@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CC 選物代購 - 工作人員後台</title>
+<title>CC 選物代購 - 下單</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -13,113 +13,113 @@ body { background: #F5F3EF; font-family: 'PingFang TC','Noto Sans TC',sans-serif
 .header h1 { color: #fff; font-size: 22px; font-weight: 700; }
 .header p { color: #A0A0B8; font-size: 12px; margin-top: 4px; }
 .tabs { background: #1A1A2E; border-bottom: 1px solid #2E2E45; }
-.tabs-inner { max-width: 900px; margin: 0 auto; display: flex; }
-.tab-btn { background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; padding: 12px 18px; font-size: 13px; font-weight: 600; color: #A0A0B8; font-family: inherit; }
+.tabs-inner { max-width: 600px; margin: 0 auto; display: flex; }
+.tab-btn { background: transparent; border: none; border-bottom: 2px solid transparent; cursor: pointer; padding: 12px 20px; font-size: 13px; font-weight: 600; color: #A0A0B8; font-family: inherit; }
 .tab-btn.active { color: #E8A87C; border-bottom-color: #E8A87C; }
-.main { max-width: 900px; margin: 0 auto; padding: 24px 16px; }
-.card { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #E8E4DF; box-shadow: 0 2px 8px rgba(0,0,0,0.05); margin-bottom: 14px; }
-.card-header { padding: 14px 18px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
-.card-header:hover { background: #FAFAF8; }
-.card-body { border-top: 1px solid #F0EDEA; }
-.item-row { padding: 14px 18px; border-bottom: 1px solid #F5F3EF; background: #FAFAF8; }
-.item-top { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 10px; }
-.thumb { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; border: 1px solid #E0DCD8; flex-shrink: 0; }
-.no-thumb { width: 64px; height: 64px; background: #F0EDEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #CCC; flex-shrink: 0; }
-.item-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-.field-label { font-size: 11px; color: #6B6B80; margin-bottom: 4px; }
-.field-value { font-size: 13px; color: #1A1A2E; padding: 8px 0; border-bottom: 1px solid #F0EDEA; }
-input, select { width: 100%; border: 1.5px solid #E8A87C; border-radius: 6px; padding: 8px 10px; font-size: 13px; color: #1A1A2E; background: #FFFEF9; outline: none; font-family: inherit; }
-.order-footer-section { padding: 14px 18px; }
-.footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 12px; }
-.total-row { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #F0EDEA; padding-top: 12px; margin-top: 4px; }
-.btn-edit { background: transparent; border: 1.5px solid #1A1A2E; border-radius: 7px; color: #1A1A2E; font-size: 12px; padding: 6px 14px; cursor: pointer; font-family: inherit; font-weight: 600; }
-.btn-save { background: #1A1A2E; color: #E8A87C; border: none; border-radius: 7px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
-.btn-cancel { background: transparent; color: #6B6B80; border: 1.5px solid #DDD8D0; border-radius: 7px; padding: 8px 14px; font-size: 13px; cursor: pointer; font-family: inherit; }
-.btn-delete { background: transparent; border: 1px solid #E0BCBC; border-radius: 6px; color: #D64045; font-size: 12px; padding: 6px 12px; cursor: pointer; font-family: inherit; }
-.btn-refresh { background: #1A1A2E; color: #E8A87C; border: none; border-radius: 7px; padding: 8px 18px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.main { max-width: 600px; margin: 0 auto; padding: 24px 16px; display: flex; flex-direction: column; gap: 16px; }
+.card { background: #fff; border-radius: 12px; padding: 22px; border: 1px solid #E8E4DF; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.card-title { font-weight: 700; color: #1A1A2E; font-size: 15px; margin-bottom: 16px; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.form-group { display: flex; flex-direction: column; }
+.form-group.full { grid-column: 1 / -1; }
+label { font-size: 12px; font-weight: 600; color: #6B6B80; margin-bottom: 5px; display: block; }
+input { width: 100%; border: 1.5px solid #DDD8D0; border-radius: 8px; padding: 10px 12px; font-size: 14px; color: #1A1A2E; background: #FAFAF8; outline: none; font-family: inherit; }
+input:focus { border-color: #E8A87C; }
+.hint { font-size: 11px; color: #A0A0B8; margin-top: 4px; }
+.upload-zone { width: 80px; height: 80px; border: 2px dashed #C8C4BE; border-radius: 10px; cursor: pointer; background: #FAFAF8; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0; }
+.btn-primary { background: #1A1A2E; color: #E8A87C; border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; width: 100%; }
+.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { background: transparent; color: #6B6B80; border: 1.5px solid #DDD8D0; border-radius: 10px; padding: 13px; font-size: 14px; font-weight: 600; cursor: pointer; font-family: inherit; flex: 1; }
+.btn-add { background: transparent; border: 2px dashed #C8C4BE; border-radius: 10px; padding: 14px; font-size: 14px; color: #A0A0B8; cursor: pointer; font-family: inherit; font-weight: 600; width: 100%; }
+.item-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+.remove-item-btn { background: transparent; border: none; color: #C0A0A0; cursor: pointer; font-size: 13px; font-family: inherit; }
+.error { color: #D64045; font-size: 13px; margin-top: 4px; }
+.success-card { background: #fff; border-radius: 12px; padding: 32px; text-align: center; border: 1px solid #E8E4DF; }
+.order-card { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #E8E4DF; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+.order-header { background: #1A1A2E; padding: 12px 18px; display: flex; justify-content: space-between; align-items: center; }
+.order-item-row { padding: 14px 18px; border-bottom: 1px solid #F0EDEA; display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.order-footer { padding: 12px 18px; background: #FAFAF8; }
+.footer-row { display: flex; justify-content: space-between; font-size: 13px; color: #6B6B80; margin-bottom: 4px; }
+.footer-total { display: flex; justify-content: space-between; font-weight: 700; font-size: 16px; color: #1A1A2E; border-top: 1px solid #E8E4DF; padding-top: 10px; margin-top: 6px; }
 .status-badge { display: inline-block; border-radius: 6px; padding: 3px 10px; font-size: 11px; font-weight: 600; }
-.badge { background: #E8A87C; color: #1A1A2E; border-radius: 20px; padding: 2px 10px; font-size: 12px; font-weight: 700; margin-left: 8px; }
-.edit-bar { display: flex; gap: 8px; align-items: center; padding: 10px 18px; background: #FEF9F4; border-top: 1px solid #F0EDEA; }
-.edit-notice { font-size: 12px; color: #8B6A3E; flex: 1; }
-.picking-card { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #E8E4DF; margin-bottom: 14px; }
-.picking-header { background: #1A1A2E; padding: 12px 18px; display: flex; justify-content: space-between; }
-.picking-item { padding: 12px 18px; border-bottom: 1px solid #F0EDEA; display: flex; gap: 12px; align-items: center; }
-.picking-item:last-child { border-bottom: none; }
-.picking-item:nth-child(even) { background: #FAFAF8; }
-.qty-badge { background: #F5F3EF; border: 1.5px solid #E8A87C; border-radius: 8px; padding: 6px 12px; text-align: center; flex-shrink: 0; }
-.shipping-card { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #E8E4DF; margin-bottom: 16px; }
-.shipping-header { background: #1A1A2E; padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; }
-.shipping-item { padding: 12px 18px; border-bottom: 1px solid #F0EDEA; display: flex; gap: 14px; align-items: center; }
-.shipping-footer { padding: 12px 18px; background: #FAFAF8; }
-.avatar { width: 32px; height: 32px; border-radius: 50%; background: #E8A87C; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #1A1A2E; flex-shrink: 0; }
 .empty { text-align: center; color: #B0AAA4; font-size: 14px; padding: 48px 0; }
 .loading-text { text-align: center; color: #A0A0B8; font-size: 13px; padding: 32px 0; }
-.save-success { color: #2E7D32; font-size: 12px; }
-.print-header { display: none; }
-@media print {
-  .header, .tabs, .card, .btn-save, .btn-delete, .btn-edit, .btn-cancel, .btn-refresh, #orders-tab { display: none !important; }
-  body.print-picking #shipping-tab, body.print-picking .shipping-top { display: none !important; }
-  body.print-picking #picking-tab { display: block !important; }
-  body.print-picking #picking-tab > div:first-child { display: none !important; }
-  body.print-shipping #picking-tab { display: none !important; }
-  body.print-shipping #shipping-tab { display: block !important; }
-  body.print-shipping .shipping-top { display: none !important; }
-  .main { padding: 0; }
-  .print-header { display: block; text-align: center; padding: 16px 0 20px; border-bottom: 3px solid #E8A87C; margin-bottom: 20px; }
-  .print-header h2 { font-size: 22px; font-weight: 700; color: #1A1A2E; margin-bottom: 4px; }
-  .print-header p { font-size: 12px; color: #6B6B80; }
-  .shipping-card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; margin-bottom: 16px; }
-  .shipping-header { background: #1A1A2E !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  .shipping-footer { background: #FAFAF8 !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  input[type=checkbox] { display: none !important; }
-}
+.thumb { width: 64px; height: 64px; object-fit: cover; border-radius: 8px; border: 1px solid #E0DCD8; flex-shrink: 0; }
+.no-thumb { width: 64px; height: 64px; background: #F0EDEA; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 11px; color: #CCC; flex-shrink: 0; }
+.confirm-warning { background: #FEF9F4; border: 1.5px solid #E8A87C; border-radius: 12px; padding: 14px; font-size: 13px; color: #8B6A3E; }
+.confirm-item { background: #fff; border-radius: 12px; overflow: hidden; border: 1px solid #E8E4DF; }
+.confirm-item-header { background: #F5F3EF; padding: 10px 16px; font-weight: 700; font-size: 13px; color: #6B6B80; }
+.confirm-item-body { padding: 16px; display: flex; gap: 14px; align-items: flex-start; }
 </style>
 </head>
 <body>
 <div class="header">
-  <div style="max-width:900px;margin:0 auto">
-    <div class="header-eyebrow">工作人員後台</div>
+  <div style="max-width:600px;margin:0 auto">
+    <div class="header-eyebrow">🛍 代購服務</div>
     <h1>CC 選物代購</h1>
-    <p>訂單管理系統</p>
+    <p>日本・韓國親飛連線</p>
   </div>
 </div>
 <div class="tabs">
   <div class="tabs-inner">
-    <button class="tab-btn active" onclick="switchTab('orders')">📋 訂單列表</button>
-    <button class="tab-btn" onclick="switchTab('picking')">📦 揀貨單</button>
-    <button class="tab-btn" onclick="switchTab('shipping')">🚚 出貨單</button>
+    <button class="tab-btn active" onclick="switchTab('order')">📝 我要下單</button>
+    <button class="tab-btn" onclick="switchTab('query')">🔍 查詢訂單</button>
   </div>
 </div>
 
-<div class="main">
-  <div id="orders-tab">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div style="font-weight:700;color:#1A1A2E;font-size:15px">所有訂單<span class="badge" id="order-count">0</span></div>
-      <button class="btn-refresh" onclick="loadAll()">🔄 重新整理</button>
+<!-- 下單頁面 -->
+<div class="main" id="order-tab">
+  <div id="stage-form" style="display:flex;flex-direction:column;gap:16px">
+    <div class="card">
+      <div class="card-title">基本資料</div>
+      <div class="form-grid">
+        <div class="form-group"><label>社群暱稱 *</label><input type="text" id="f-nickname" placeholder="你的社群暱稱"></div>
+        <div class="form-group"><label>手機號碼 *</label><input type="text" id="f-phone" placeholder="09xxxxxxxx"></div>
+      </div>
     </div>
-    <div class="loading-text" id="loading-orders">載入中…</div>
-    <div id="orders-list"></div>
+    <div id="items-container" style="display:flex;flex-direction:column;gap:16px"></div>
+    <button class="btn-add" onclick="addItemForm()">＋ 新增商品</button>
+    <div class="error" id="form-error" style="display:none"></div>
+    <button class="btn-primary" onclick="goConfirm()">下一步：確認訂單 →</button>
   </div>
 
-  <div id="picking-tab" style="display:none">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div style="font-weight:700;color:#1A1A2E;font-size:15px">揀貨單</div>
-      <button class="btn-refresh" onclick="printPicking()">🖨 列印揀貨單</button>
+  <div id="stage-confirm" style="display:none;flex-direction:column;gap:16px">
+    <div class="confirm-warning">⚠️ 請確認以下訂單內容正確後再送出</div>
+    <div class="card">
+      <div class="card-title" style="margin-bottom:12px">基本資料</div>
+      <div style="display:flex;flex-direction:column;gap:8px;font-size:14px">
+        <div style="display:flex;justify-content:space-between"><span style="color:#6B6B80">社群暱稱</span><span style="font-weight:600" id="c-nickname"></span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:#6B6B80">手機號碼</span><span style="font-weight:600" id="c-phone"></span></div>
+      </div>
     </div>
-    <div id="picking-list"></div>
+    <div id="confirm-items" style="display:flex;flex-direction:column;gap:12px"></div>
+    <div style="display:flex;gap:10px">
+      <button class="btn-secondary" onclick="backToForm()">← 返回修改</button>
+      <button class="btn-primary" id="confirm-btn" style="flex:2" onclick="submitOrder()">確認送出 ✓</button>
+    </div>
   </div>
 
-  <div id="shipping-tab" style="display:none">
-    <div class="print-header">
-      <h2>CC 選物代購</h2>
-      <p>出貨單</p>
+  <div id="stage-done" style="display:none">
+    <div class="success-card">
+      <div style="font-size:48px;margin-bottom:16px">🎉</div>
+      <div style="font-weight:700;font-size:18px;color:#1A1A2E;margin-bottom:8px">訂單已送出！</div>
+      <div style="color:#6B6B80;font-size:14px;margin-bottom:24px">我們會盡快處理，可用手機號碼查詢狀態</div>
+      <div style="background:#F5F3EF;border-radius:8px;padding:12px 20px;display:inline-block;font-weight:700;color:#1A1A2E;font-size:15px;margin-bottom:20px" id="done-order-no"></div><br>
+      <button class="btn-primary" style="width:auto;padding:10px 24px;font-size:13px" onclick="resetForm()">再下一筆訂單</button>
     </div>
-    <div class="shipping-top" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-      <div style="font-weight:700;color:#1A1A2E;font-size:15px">出貨單</div>
-      <button class="btn-refresh" onclick="printShipping()">🖨 列印勾選</button>
-    </div>
-    <div id="shipping-list"></div>
   </div>
+</div>
+
+<!-- 查詢頁面 -->
+<div class="main" id="query-tab" style="display:none">
+  <div class="card">
+    <div class="card-title">查詢我的訂單</div>
+    <label>輸入手機號碼</label>
+    <input type="text" id="q-phone" placeholder="09xxxxxxxx" style="margin-top:5px;margin-bottom:16px">
+    <button class="btn-primary" onclick="queryOrders()">查詢</button>
+    <div class="error" id="query-error" style="display:none"></div>
+  </div>
+  <div id="query-results" style="display:flex;flex-direction:column;gap:14px"></div>
 </div>
 
 <script>
@@ -127,424 +127,237 @@ const SUPABASE_URL = 'https://zwabpiysvlqvqunauwyj.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3YWJwaXlzdmxxdnF1bmF1d3lqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxMTA1MzgsImV4cCI6MjA5NzY4NjUzOH0.-jx1ikazqqKRta-8lEoifeKR9bVVm_E00m4e17q_6z8';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const STATUS_OPTIONS = [
-  { value:'pending', label:'處理中', color:'#A0A0B8', bg:'#F0F0F8' },
-  { value:'success', label:'採購成功', color:'#2E7D32', bg:'#E8F5E9' },
-  { value:'outofstock', label:'斷貨', color:'#D64045', bg:'#FFEBEE' },
-  { value:'preparing', label:'出貨準備中', color:'#E65100', bg:'#FFF3E0' },
-  { value:'done', label:'已完成', color:'#1565C0', bg:'#E3F2FD' },
-];
+const STATUS_LABEL = { pending:'處理中', success:'採購成功', outofstock:'斷貨', preparing:'出貨準備中', done:'已完成' };
+const STATUS_COLOR = { pending:'#A0A0B8', success:'#2E7D32', outofstock:'#D64045', preparing:'#E65100', done:'#1565C0' };
+const STATUS_BG = { pending:'#F0F0F8', success:'#E8F5E9', outofstock:'#FFEBEE', preparing:'#FFF3E0', done:'#E3F2FD' };
 
-let allCustomers = [];
-let allItems = [];
-let expanded = null;
-let editingOrder = null; // 哪個訂單在編輯中
-let editingItems = {}; // 暫存編輯中的 item 資料
-let editingCustomer = {}; // 暫存編輯中的 customer 資料
-
-async function loadAll() {
-  document.getElementById('loading-orders').style.display = 'block';
-  const { data: customers } = await sb.from('customers').select('*').order('created_at', { ascending: false });
-  const { data: items } = await sb.from('order_items').select('*').order('created_at', { ascending: true });
-  allCustomers = customers || [];
-  allItems = items || [];
-  editingOrder = null;
-  document.getElementById('loading-orders').style.display = 'none';
-  document.getElementById('order-count').textContent = allCustomers.length;
-  renderOrders();
-  renderPicking();
-  renderShipping();
-}
-
-function getCustomerItems(customerId) {
-  return allItems.filter(it => it.customer_id === customerId);
-}
-
-function calcTotal(customer, items) {
-  const itemsTotal = items.reduce((s, it) => {
-    if (it.status === 'outofstock') return s; // 斷貨不計入
-    const twd = (it.price_twd && it.price_twd > 0) ? it.price_twd : (it.price_jpy * (it.rate||0));
-    return s + twd * it.qty;
-  }, 0);
-  return itemsTotal + (Number(customer.shipping)||0) + (Number(customer.extra)||0) - (Number(customer.discount)||0);
-}
-
-function getStatusOpt(status) {
-  return STATUS_OPTIONS.find(s => s.value === status) || STATUS_OPTIONS[0];
-}
-
-function startEdit(customerId) {
-  editingOrder = customerId;
-  const c = allCustomers.find(c => c.id === customerId);
-  const items = getCustomerItems(customerId);
-  editingCustomer = { shipping: c.shipping||0, extra: c.extra||0, discount: c.discount||0, note: c.note||'' };
-  editingItems = {};
-  items.forEach(it => {
-    editingItems[it.id] = { rate: it.rate||0, status: it.status||'pending', vendor: it.vendor||'', price_twd: it.price_twd||0 };
-  });
-  renderOrders();
-}
-
-function cancelEdit() {
-  editingOrder = null;
-  editingItems = {};
-  editingCustomer = {};
-  renderOrders();
-}
-
-async function saveEdit(customerId) {
-  const btn = document.getElementById(`save-btn-${customerId}`);
-  if (btn) { btn.disabled = true; btn.textContent = '儲存中…'; }
-
-  // Save customer fields
-  await sb.from('customers').update({
-    shipping: editingCustomer.shipping,
-    extra: editingCustomer.extra,
-    discount: editingCustomer.discount,
-    note: editingCustomer.note,
-  }).eq('id', customerId);
-
-  // Save item fields
-  for (const [itemId, data] of Object.entries(editingItems)) {
-    await sb.from('order_items').update({
-      rate: data.rate,
-      status: data.status,
-    }).eq('id', Number(itemId));
-  }
-
-  // Update local data
-  const cIdx = allCustomers.findIndex(c => c.id === customerId);
-  if (cIdx !== -1) {
-    allCustomers[cIdx].shipping = editingCustomer.shipping;
-    allCustomers[cIdx].extra = editingCustomer.extra;
-    allCustomers[cIdx].discount = editingCustomer.discount;
-    allCustomers[cIdx].note = editingCustomer.note;
-  }
-  for (const [itemId, data] of Object.entries(editingItems)) {
-    const iIdx = allItems.findIndex(it => it.id === Number(itemId));
-    if (iIdx !== -1) {
-      allItems[iIdx].rate = data.rate;
-      allItems[iIdx].status = data.status;
-      allItems[iIdx].price_twd = data.price_twd;
-    }
-  }
-
-  editingOrder = null;
-  editingItems = {};
-  editingCustomer = {};
-  renderOrders();
-  renderShipping();
-}
-
-async function deleteOrder(customerId) {
-  const pwd = prompt('請輸入刪除密碼：');
-  if (pwd !== '888') { alert('密碼錯誤！'); return; }
-  await sb.from('customers').delete().eq('id', customerId);
-  allCustomers = allCustomers.filter(c => c.id !== customerId);
-  allItems = allItems.filter(it => it.customer_id !== customerId);
-  expanded = null; editingOrder = null;
-  renderOrders(); renderPicking(); renderShipping();
-}
-
-function renderOrders() {
-  const container = document.getElementById('orders-list');
-  if (!allCustomers.length) { container.innerHTML = '<div class="empty">尚無訂單</div>'; return; }
-
-  container.innerHTML = allCustomers.map(c => {
-    const items = getCustomerItems(c.id);
-    const isOpen = expanded === c.id;
-    const isEditing = editingOrder === c.id;
-    const total = calcTotal(
-      isEditing ? { ...c, ...editingCustomer } : c,
-      isEditing ? items.map(it => ({ ...it, ...(editingItems[it.id]||{}) })) : items
-    );
-
-    return `<div class="card">
-      <div class="card-header" onclick="toggleExpand(${c.id})">
-        <div>
-          <div style="font-weight:700;color:#1A1A2E;font-size:14px">${esc(c.order_no)}</div>
-          <div style="font-size:12px;color:#6B6B80;margin-top:3px">${esc(c.nickname)}・${esc(c.phone)}・${c.created_at?.slice(0,16)}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:12px">
-          ${total > 0 ? `<div style="font-weight:700;color:#E8A87C;font-size:14px">NT$${Math.round(total).toLocaleString()}</div>` : ''}
-          <div style="color:#A0A0B8;font-size:16px">${isOpen ? '▲' : '▼'}</div>
-        </div>
-      </div>
-
-      ${isOpen ? `<div class="card-body">
-        ${items.map(it => {
-          const editing = isEditing ? (editingItems[it.id] || {}) : {};
-          const rate = isEditing ? editing.rate : it.rate;
-          const status = isEditing ? editing.status : it.status;
-          const twd = rate ? Math.round(it.price_jpy * rate * it.qty) : 0;
-          const sOpt = getStatusOpt(status);
-          return `<div class="item-row">
-            <div class="item-top">
-              ${it.image_url ? `<img src="${esc(it.image_url)}" class="thumb">` : '<div class="no-thumb">無圖</div>'}
-              <div style="flex:1">
-                <div style="font-weight:700;color:#1A1A2E;font-size:14px;margin-bottom:4px">${esc(it.name)}</div>
-                <div style="font-size:12px;color:#6B6B80">${it.size?esc(it.size)+'　':''}數量：${it.qty}　¥${(it.price_jpy||0).toLocaleString()}</div>
-                <span class="status-badge" style="background:${sOpt.bg};color:${sOpt.color}">${sOpt.label}</span>
-              </div>
-              ${twd > 0 ? `<div style="font-weight:700;color:#1A1A2E;font-size:14px;flex-shrink:0">NT$${twd.toLocaleString()}</div>` : ''}
-            </div>
-            ${isEditing ? `
-            <div class="item-grid">
-              <div>
-                <div class="field-label">匯率（¥1 = NT$?）</div>
-                <input type="number" step="0.01" value="${rate||''}" placeholder="如：0.22"
-                  oninput="editingItems[${it.id}].rate = parseFloat(this.value)||0; rerenderTotal(${c.id})">
-              </div>
-              <div>
-                <div class="field-label">商品狀態</div>
-                <select onchange="editingItems[${it.id}].status = this.value; rerenderBadge(${it.id}, this.value)">
-                  ${STATUS_OPTIONS.map(s => `<option value="${s.value}" ${status===s.value?'selected':''}>${s.label}</option>`).join('')}
-                </select>
-              </div>
-            </div>` : `
-            <div class="item-grid">
-              <div>
-                <div class="field-label">匯率</div>
-                <div class="field-value">${it.rate ? `¥1 = NT$${it.rate}` : '未設定'}</div>
-              </div>
-              <div>
-                <div class="field-label">商品狀態</div>
-                <div class="field-value">${sOpt.label}</div>
-              </div>
-            </div>`}
-          </div>`;
-        }).join('')}
-
-        <div class="order-footer-section">
-          ${isEditing ? `
-          <div class="footer-grid">
-            <div>
-              <div class="field-label">運費 NT$</div>
-              <input type="number" value="${editingCustomer.shipping||''}" placeholder="0"
-                oninput="editingCustomer.shipping = parseFloat(this.value)||0; rerenderTotal(${c.id})">
-            </div>
-            <div>
-              <div class="field-label">其他加價 NT$</div>
-              <input type="number" value="${editingCustomer.extra||''}" placeholder="0"
-                oninput="editingCustomer.extra = parseFloat(this.value)||0; rerenderTotal(${c.id})">
-            </div>
-            <div>
-              <div class="field-label">優惠折扣 NT$</div>
-              <input type="number" value="${editingCustomer.discount||''}" placeholder="0"
-                oninput="editingCustomer.discount = parseFloat(this.value)||0; rerenderTotal(${c.id})">
-            </div>
-            <div>
-              <div class="field-label">備註</div>
-              <input type="text" value="${esc(editingCustomer.note||'')}" placeholder="備註"
-                oninput="editingCustomer.note = this.value">
-            </div>
-          </div>` : `
-          <div class="footer-grid">
-            <div>
-              <div class="field-label">運費</div>
-              <div class="field-value">NT$${Number(c.shipping||0).toLocaleString()}</div>
-            </div>
-            <div>
-              <div class="field-label">其他加價</div>
-              <div class="field-value">NT$${Number(c.extra||0).toLocaleString()}</div>
-            </div>
-            <div>
-              <div class="field-label">優惠折扣</div>
-              <div class="field-value">${Number(c.discount||0)>0?'- NT$'+Number(c.discount).toLocaleString():'-'}</div>
-            </div>
-            <div>
-              <div class="field-label">備註</div>
-              <div class="field-value">${esc(c.note||'-')}</div>
-            </div>
-          </div>`}
-
-          <div class="total-row">
-            <div style="font-weight:700;font-size:15px;color:#1A1A2E">
-              應付總金額：<span style="color:#E8A87C" id="total-${c.id}">NT$${Math.round(total).toLocaleString()}</span>
-            </div>
-            <div style="display:flex;gap:8px;align-items:center">
-              ${isEditing
-                ? `<button class="btn-cancel" onclick="cancelEdit()">取消</button>
-                   <button class="btn-save" id="save-btn-${c.id}" onclick="saveEdit(${c.id})">💾 儲存</button>`
-                : `<button class="btn-delete" onclick="deleteOrder(${c.id})">🗑 刪除</button>
-                   <button class="btn-edit" onclick="startEdit(${c.id})">✏️ 修改</button>`
-              }
-            </div>
-          </div>
-        </div>
-      </div>` : ''}
-    </div>`;
-  }).join('');
-}
-
-function rerenderTotal(customerId) {
-  const c = allCustomers.find(c => c.id === customerId);
-  const items = getCustomerItems(customerId);
-  const mergedItems = items.map(it => ({ ...it, ...(editingItems[it.id]||{}) }));
-  const total = calcTotal(
-    { ...c, ...editingCustomer },
-    mergedItems
-  );
-  const el = document.getElementById(`total-${customerId}`);
-  if (el) el.textContent = `NT$${Math.round(total).toLocaleString()}`;
-}
-
-function rerenderBadge(itemId, status) {
-  // badge updates via status-badge span if needed
-}
-
-function toggleExpand(id) {
-  if (editingOrder === id) return; // 編輯中不能收起
-  expanded = expanded === id ? null : id;
-  if (expanded === id && editingOrder !== id) editingOrder = null;
-  renderOrders();
-}
-
-function renderPicking() {
-  // Group by customer (nickname)
-  const groups = {};
-  allItems.forEach(it => {
-    const c = allCustomers.find(c => c.id === it.customer_id);
-    const key = c?.nickname || '未知';
-    if (!groups[key]) groups[key] = { customer: c, items: [] };
-    groups[key].items.push(it);
-  });
-  const container = document.getElementById('picking-list');
-  const names = Object.keys(groups);
-  if (!names.length) { container.innerHTML = '<div class="empty">尚無訂單</div>'; return; }
-  container.innerHTML = names.map(name => {
-    const { customer: c, items } = groups[name];
-    const totalQty = items.reduce((s, it) => s + it.qty, 0);
-    return `<div class="picking-card">
-      <div class="picking-header">
-        <div style="display:flex;align-items:center;gap:10px">
-          <div style="width:32px;height:32px;border-radius:50%;background:#E8A87C;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;color:#1A1A2E">${esc(name.charAt(0).toUpperCase())}</div>
-          <div>
-            <span style="color:#fff;font-weight:700;font-size:15px">${esc(name)}</span>
-            <div style="color:#A0A0B8;font-size:11px;margin-top:2px">${esc(c?.order_no||'')}　${c?.created_at?.slice(0,10)||''}</div>
-          </div>
-        </div>
-        <span style="color:#E8A87C;font-size:12px;font-weight:600">共 ${totalQty} 件</span>
-      </div>
-      ${items.map(it => {
-        const sOpt = getStatusOpt(it.status);
-        return `<div class="picking-item">
-          ${it.image_url ? `<img src="${esc(it.image_url)}" style="width:64px;height:64px;object-fit:cover;border-radius:8px;flex-shrink:0">` : '<div style="width:64px;height:64px;background:#F0EDEA;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#CCC;flex-shrink:0">無圖</div>'}
-          <div style="flex:1">
-            <div style="font-weight:600;color:#1A1A2E;font-size:14px">${esc(it.name)}</div>
-            <div style="font-size:12px;color:#6B6B80;margin-top:2px">
-              ${it.size?esc(it.size)+'　':''}數量：${it.qty}
-              ${it.vendor?`　廠商：<b>${esc(it.vendor)}</b>`:''}
-            </div>
-            <span class="status-badge" style="background:${sOpt.bg};color:${sOpt.color}">${sOpt.label}</span>
-          </div>
-          <div class="qty-badge">
-            <div style="font-size:10px;color:#A0A0B8">數量</div>
-            <div style="font-weight:700;font-size:18px;color:#1A1A2E">${it.qty}</div>
-          </div>
-        </div>`;
-      }).join('')}
-    </div>`;
-  }).join('');
-}
-
-function renderShipping() {
-  const container = document.getElementById('shipping-list');
-  if (!allCustomers.length) { container.innerHTML = '<div class="empty">尚無訂單</div>'; return; }
-
-  // Group by nickname
-  const groups = {};
-  allCustomers.forEach(c => {
-    const key = c.nickname;
-    if (!groups[key]) groups[key] = { customers: [], items: [] };
-    groups[key].customers.push(c);
-    groups[key].items.push(...getCustomerItems(c.id));
-  });
-
-  const names = Object.keys(groups);
-  container.innerHTML = names.map(name => {
-    const { customers, items } = groups[name];
-    const totalQty = items.reduce((s, it) => s + it.qty, 0);
-    // Sum up shipping/extra from all customers in group
-    const totalShipping = customers.reduce((s, c) => s + (Number(c.shipping)||0), 0);
-    const totalExtra = customers.reduce((s, c) => s + (Number(c.extra)||0), 0);
-    const totalDiscount = customers.reduce((s, c) => s + (Number(c.discount)||0), 0);
-    const itemsTwd = items.reduce((s, it) => {
-      if (it.status === 'outofstock') return s;
-      const twd = (it.price_twd && it.price_twd > 0) ? it.price_twd : (it.rate ? it.price_jpy * it.rate : 0);
-      return s + twd * it.qty;
-    }, 0);
-    const grandTotal = itemsTwd + totalShipping + totalExtra - totalDiscount;
-    const orderNos = customers.map(c => c.order_no).join('、');
-
-    return `<div class="shipping-card" data-name="${esc(name)}">
-      <div class="shipping-header">
-        <div style="display:flex;align-items:center;gap:10px">
-          <input type="checkbox" class="ship-check" data-name="${esc(name)}" style="width:18px;height:18px;accent-color:#E8A87C;cursor:pointer">
-          <div class="avatar">${esc(name.charAt(0))}</div>
-          <div>
-            <div style="color:#fff;font-weight:700;font-size:15px">${esc(name)}</div>
-            <div style="color:#A0A0B8;font-size:11px">${esc(orderNos)}</div>
-          </div>
-        </div>
-        <span style="color:#E8A87C;font-size:12px;font-weight:600">${totalQty} 件</span>
-      </div>
-      ${items.map((it, i) => {
-        const twd = it.rate ? Math.round(it.price_jpy * it.rate * it.qty) : 0;
-        const sOpt = getStatusOpt(it.status);
-        return `<div class="shipping-item" style="background:${i%2===0?'#fff':'#FAFAF8'}">
-          ${it.image_url ? `<img src="${esc(it.image_url)}" style="width:72px;height:72px;object-fit:cover;border-radius:8px;flex-shrink:0">` : '<div style="width:72px;height:72px;background:#F0EDEA;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:#CCC;flex-shrink:0">無圖</div>'}
-          <div style="flex:1">
-            <div style="font-weight:700;color:${it.status==='outofstock'?'#D64045':'#1A1A2E'};font-size:14px;margin-bottom:4px">${esc(it.name)}${it.status==='outofstock'?' （斷貨）':''}</div>
-            <div style="font-size:12px;color:#6B6B80">
-              ${it.size?esc(it.size)+'　':''}數量：${it.qty}
-              ${it.vendor?`　廠商：${esc(it.vendor)}`:''}
-            </div>
-            <span class="status-badge" style="background:${sOpt.bg};color:${sOpt.color}">${sOpt.label}</span>
-          </div>
-          ${it.status==='outofstock' ? '<div style="color:#D64045;font-size:13px;font-weight:600;flex-shrink:0">不計費</div>' : twd > 0 ? `<div style="font-weight:700;color:#1A1A2E;font-size:14px;flex-shrink:0">NT$${twd.toLocaleString()}</div>` : ''}
-        </div>`;
-      }).join('')}
-      <div class="shipping-footer">
-        ${itemsTwd>0?`<div style="display:flex;justify-content:space-between;font-size:13px;color:#6B6B80;margin-bottom:4px"><span>商品金額</span><span>NT$${Math.round(itemsTwd).toLocaleString()}</span></div>`:''}
-        ${totalShipping>0?`<div style="display:flex;justify-content:space-between;font-size:13px;color:#6B6B80;margin-bottom:4px"><span>運費</span><span>NT$${totalShipping.toLocaleString()}</span></div>`:''}
-        ${totalExtra>0?`<div style="display:flex;justify-content:space-between;font-size:13px;color:#6B6B80;margin-bottom:4px"><span>其他加價</span><span>NT$${totalExtra.toLocaleString()}</span></div>`:''}
-        <div style="display:flex;justify-content:space-between;font-weight:700;font-size:16px;color:#1A1A2E;border-top:1px solid #E8E4DF;padding-top:10px;margin-top:6px">
-          <span>應付總金額</span>
-          <span style="color:#E8A87C">NT$${Math.round(grandTotal).toLocaleString()}</span>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function printPicking() {
-  document.body.classList.add('print-picking');
-  document.body.classList.remove('print-shipping');
-  window.print();
-  document.body.classList.remove('print-picking');
-}
-
-function printShipping() {
-  const checked = [...document.querySelectorAll('.ship-check:checked')].map(cb => cb.dataset.name);
-  if (!checked.length) { alert('請先勾選要列印的客人！'); return; }
-  document.querySelectorAll('.shipping-card').forEach(card => {
-    card.style.display = checked.includes(card.dataset.name) ? 'block' : 'none';
-  });
-  document.body.classList.add('print-shipping');
-  document.body.classList.remove('print-picking');
-  window.print();
-  document.body.classList.remove('print-shipping');
-  document.querySelectorAll('.shipping-card').forEach(card => card.style.display = '');
-}
+let itemCount = 0;
+let itemImages = {};
 
 function switchTab(tab) {
-  ['orders','picking','shipping'].forEach(t => {
-    document.getElementById(t+'-tab').style.display = t === tab ? 'block' : 'none';
-  });
+  document.getElementById('order-tab').style.display = tab === 'order' ? 'flex' : 'none';
+  document.getElementById('query-tab').style.display = tab === 'query' ? 'flex' : 'none';
   document.querySelectorAll('.tab-btn').forEach((btn, i) => {
-    btn.classList.toggle('active', ['orders','picking','shipping'][i] === tab);
+    btn.classList.toggle('active', (i===0&&tab==='order')||(i===1&&tab==='query'));
   });
+}
+
+function addItemForm() {
+  const i = ++itemCount;
+  const div = document.createElement('div');
+  div.className = 'card'; div.id = `item-${i}`;
+  div.innerHTML = `
+    <div class="item-header">
+      <div style="font-weight:700;color:#1A1A2E;font-size:15px">商品 ${i}</div>
+      ${i > 1 ? `<button class="remove-item-btn" onclick="removeItemForm(${i})">✕ 移除</button>` : ''}
+    </div>
+    <div style="margin-bottom:14px">
+      <label>商品截圖</label>
+      <div style="display:flex;gap:12px;align-items:flex-start;margin-top:5px">
+        <div class="upload-zone" id="zone-${i}" onclick="document.getElementById('img-${i}').click()">
+          <span style="font-size:22px">📷</span>
+        </div>
+        <div style="font-size:12px;color:#A0A0B8;padding-top:6px">
+          點擊上傳商品截圖<br>
+          <span id="img-remove-${i}" style="color:#D64045;cursor:pointer;display:none" onclick="removeImg(${i})">✕ 移除</span>
+        </div>
+        <input type="file" id="img-${i}" accept="image/*" style="display:none" onchange="handleImg(${i},this)">
+      </div>
+    </div>
+    <div class="form-grid">
+      <div class="form-group full">
+        <label>商品名稱 *</label>
+        <input type="text" id="name-${i}" placeholder="如：上衣、襪子、零食">
+        
+      </div>
+      <div class="form-group">
+        <label>尺寸與規格</label>
+        <input type="text" id="size-${i}" placeholder="如：粉100、草莓口味、藍S">
+        <div class="hint">請輸入顏色＋尺寸</div>
+      </div>
+      <div class="form-group">
+        <label>數量 *</label>
+        <input type="number" id="qty-${i}" placeholder="1" min="1">
+      </div>
+      <div class="form-group">
+        <label>日幣原價 ¥</label>
+        <input type="number" id="jpy-${i}" placeholder="如：1500">
+      </div>
+      <div class="form-group">
+        <label>公告台幣售價 NT$</label>
+        <input type="number" id="twd-${i}" placeholder="如：350">
+      </div>
+      <div class="form-group">
+        <label>廠商/品牌</label>
+        <input type="text" id="vendor-${i}" placeholder="如：西松屋、生日城、批店、好市多">
+      </div>
+      <div class="form-group">
+        <label>備註</label>
+        <input type="text" id="note-${i}" placeholder="特殊需求">
+      </div>
+    </div>`;
+  document.getElementById('items-container').appendChild(div);
+}
+
+function removeItemForm(i) {
+  document.getElementById(`item-${i}`)?.remove();
+  delete itemImages[i];
+}
+
+function handleImg(i, input) {
+  if (!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    itemImages[i] = { dataUrl: e.target.result, file: input.files[0] };
+    document.getElementById(`zone-${i}`).innerHTML = `<img src="${e.target.result}" style="width:100%;height:100%;object-fit:cover">`;
+    document.getElementById(`img-remove-${i}`).style.display = 'inline';
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function removeImg(i) {
+  delete itemImages[i];
+  document.getElementById(`zone-${i}`).innerHTML = '<span style="font-size:22px">📷</span>';
+  document.getElementById(`img-remove-${i}`).style.display = 'none';
+  document.getElementById(`img-${i}`).value = '';
+}
+
+function getItems() {
+  const items = [];
+  document.querySelectorAll('#items-container > .card').forEach(el => {
+    const i = el.id ? el.id.split('-')[1] : null;
+    if (!i) return;
+    const name = document.getElementById(`name-${i}`)?.value.trim();
+    const qty = document.getElementById(`qty-${i}`)?.value.trim();
+    if (name && qty) items.push({
+      idx: i, name, qty: parseInt(qty),
+      size: document.getElementById(`size-${i}`)?.value.trim() || '',
+      price_jpy: parseFloat(document.getElementById(`jpy-${i}`)?.value) || 0,
+      price_twd: parseFloat(document.getElementById(`twd-${i}`)?.value) || 0,
+      vendor: document.getElementById(`vendor-${i}`)?.value.trim() || '',
+      note: document.getElementById(`note-${i}`)?.value.trim() || '',
+      image: itemImages[i] || null,
+    });
+  });
+  return items;
+}
+
+function goConfirm() {
+  const nickname = document.getElementById('f-nickname').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const items = getItems();
+  const errEl = document.getElementById('form-error');
+  if (!nickname || !phone) { errEl.textContent = '請填寫社群暱稱和手機號碼'; errEl.style.display = 'block'; return; }
+  if (!items.length) { errEl.textContent = '請至少新增一件商品'; errEl.style.display = 'block'; return; }
+  errEl.style.display = 'none';
+  document.getElementById('c-nickname').textContent = nickname;
+  document.getElementById('c-phone').textContent = phone;
+  document.getElementById('confirm-items').innerHTML = items.map((it, n) => `
+    <div class="confirm-item">
+      <div class="confirm-item-header">商品 ${n+1}</div>
+      <div class="confirm-item-body">
+        ${it.image ? `<img src="${it.image.dataUrl}" class="thumb">` : '<div class="no-thumb">無圖</div>'}
+        <div style="flex:1;font-size:14px">
+          <div style="font-weight:700;color:#1A1A2E;margin-bottom:6px">${esc(it.name)}</div>
+          <div style="color:#6B6B80;display:flex;flex-direction:column;gap:3px">
+            ${it.size ? `<span>尺寸與規格：${esc(it.size)}</span>` : ''}
+            <span>數量：${it.qty}</span>
+            ${it.price_jpy ? `<span>日幣原價：¥${it.price_jpy.toLocaleString()}</span>` : ''}
+            ${it.price_twd ? `<span>公告台幣售價：NT$${it.price_twd.toLocaleString()}</span>` : ''}
+            ${it.vendor ? `<span>廠商/品牌：${esc(it.vendor)}</span>` : ''}
+            ${it.note ? `<span>備註：${esc(it.note)}</span>` : ''}
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+  document.getElementById('stage-form').style.display = 'none';
+  document.getElementById('stage-confirm').style.display = 'flex';
+}
+
+function backToForm() {
+  document.getElementById('stage-form').style.display = 'flex';
+  document.getElementById('stage-confirm').style.display = 'none';
+}
+
+
+
+async function submitOrder() {
+  const btn = document.getElementById('confirm-btn');
+  btn.disabled = true; btn.textContent = '送出中…';
+  const nickname = document.getElementById('f-nickname').value.trim();
+  const phone = document.getElementById('f-phone').value.trim();
+  const items = getItems();
+  // 訂單編號由出貨單生成
+  const { data: customer, error: cErr } = await sb.from('customers').insert([{ nickname, phone }]).select().single();
+  if (cErr) { alert('送出失敗：' + cErr.message); btn.disabled = false; btn.textContent = '確認送出 ✓'; return; }
+  for (const it of items) {
+    let image_url = '';
+    if (it.image) {
+      const ext = it.image.file.name.split('.').pop();
+      const fileName = `${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+      const { error: upErr } = await sb.storage.from('order-images').upload(fileName, it.image.file);
+      if (!upErr) {
+        const { data: urlData } = sb.storage.from('order-images').getPublicUrl(fileName);
+        image_url = urlData.publicUrl;
+      }
+    }
+    const { error: iErr } = await sb.from('order_items').insert([{ customer_id: customer.id, name: it.name, size: it.size, qty: it.qty, price_jpy: it.price_jpy, price_twd: it.price_twd||0, vendor: it.vendor||'', note: it.note, image_url }]);
+    if (iErr) { alert('商品寫入失敗：' + iErr.message); }
+  }
+  document.getElementById('done-order-no').textContent = '訂單已成功送出！工作人員將盡快處理';
+  document.getElementById('stage-confirm').style.display = 'none';
+  document.getElementById('stage-done').style.display = 'block';
+  btn.disabled = false; btn.textContent = '確認送出 ✓';
+}
+
+function resetForm() {
+  document.getElementById('f-nickname').value = '';
+  document.getElementById('f-phone').value = '';
+  document.getElementById('items-container').innerHTML = '';
+  itemCount = 0; itemImages = {};
+  addItemForm();
+  document.getElementById('stage-done').style.display = 'none';
+  document.getElementById('stage-form').style.display = 'flex';
+}
+
+async function queryOrders() {
+  const phone = document.getElementById('q-phone').value.trim();
+  const errEl = document.getElementById('query-error');
+  const results = document.getElementById('query-results');
+  if (!phone) { errEl.textContent = '請輸入手機號碼'; errEl.style.display = 'block'; return; }
+  errEl.style.display = 'none';
+  results.innerHTML = '<div class="loading-text">查詢中…</div>';
+  const { data: customers } = await sb.from('customers').select('*').eq('phone', phone).order('created_at', { ascending: false });
+  if (!customers?.length) { results.innerHTML = '<div class="empty">找不到訂單，請確認手機號碼是否正確</div>'; return; }
+  const allItems = await Promise.all(customers.map(c => sb.from('order_items').select('*').eq('customer_id', c.id)));
+  results.innerHTML = customers.map((c, idx) => {
+    const items = allItems[idx]?.data || [];
+    const itemsTotal = items.reduce((s, it) => {
+      if (it.status === 'outofstock') return s;
+      const twd = (it.price_twd && it.price_twd > 0) ? it.price_twd : (it.price_jpy * (it.rate||0));
+      return s + twd * it.qty;
+    }, 0);
+    const total = itemsTotal + (Number(c.shipping)||0) + (Number(c.extra)||0);
+    return `<div class="order-card">
+      <div class="order-header">
+        <div style="color:#fff;font-weight:700;font-size:14px">${esc(c.order_no)}</div>
+        <div style="color:#E8A87C;font-size:12px">${c.created_at?.slice(0,10)}</div>
+      </div>
+      ${items.map(it => `<div class="order-item-row">
+        <div>
+          <div style="font-weight:600;color:#1A1A2E;font-size:14px">${esc(it.name)}</div>
+          <div style="font-size:12px;color:#6B6B80;margin-top:3px">${it.size?esc(it.size)+'　':''}數量：${it.qty}${it.price_jpy?'　¥'+it.price_jpy.toLocaleString():''}</div>
+          <div style="margin-top:6px"><span class="status-badge" style="background:${STATUS_BG[it.status]||'#F0F0F8'};color:${STATUS_COLOR[it.status]||'#A0A0B8'}">${STATUS_LABEL[it.status]||'處理中'}</span></div>
+        </div>
+        ${it.status==='outofstock'?'<div style="color:#D64045;font-size:13px;font-weight:600;flex-shrink:0">不計費</div>':((it.price_twd>0?it.price_twd:(it.rate&&it.price_jpy?it.price_jpy*it.rate:0))>0?`<div style="font-weight:700;color:#1A1A2E;font-size:14px;flex-shrink:0">NT$${Math.round((it.price_twd>0?it.price_twd:it.price_jpy*it.rate)*it.qty).toLocaleString()}</div>`:'')}
+      </div>`).join('')}
+      <div class="order-footer">
+        ${Number(c.shipping)>0?`<div class="footer-row"><span>運費</span><span>NT$${Number(c.shipping).toLocaleString()}</span></div>`:''}
+        ${Number(c.extra)>0?`<div class="footer-row"><span>其他加價</span><span>NT$${Number(c.extra).toLocaleString()}</span></div>`:''}
+        ${total>0?`<div class="footer-total"><span>應付總金額</span><span style="color:#E8A87C">NT$${Math.round(total).toLocaleString()}</span></div>`:itemsTotal===0?'<div style="font-size:13px;color:#A0A0B8;margin-top:6px">金額由工作人員確認後顯示</div>':''}
+      </div>
+    </div>`;
+  }).join('');
 }
 
 function esc(str) {
@@ -552,11 +365,7 @@ function esc(str) {
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 }
 
-loadAll();
-sb.channel('realtime-changes')
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'customers' }, () => { if (!editingOrder) loadAll(); })
-  .on('postgres_changes', { event: '*', schema: 'public', table: 'order_items' }, () => { if (!editingOrder) loadAll(); })
-  .subscribe();
+addItemForm();
 </script>
 </body>
 </html>
