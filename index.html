@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>CC 選物代購 - 我要下單</title>
+<title>CC 選物代購 - 下單</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -55,9 +55,9 @@ input:focus { border-color: #E8A87C; }
 <body>
 <div class="header">
   <div style="max-width:600px;margin:0 auto">
-    <div class="header-eyebrow">🛍 日本商品代購服務</div>
+    <div class="header-eyebrow">🛍 代購服務</div>
     <h1>CC 選物代購</h1>
-    <p>日本商品自助下單</p>
+    <p>日本・韓國親飛連線</p>
   </div>
 </div>
 <div class="tabs">
@@ -127,9 +127,9 @@ const SUPABASE_URL = 'https://zwabpiysvlqvqunauwyj.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inp3YWJwaXlzdmxxdnF1bmF1d3lqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODIxMTA1MzgsImV4cCI6MjA5NzY4NjUzOH0.-jx1ikazqqKRta-8lEoifeKR9bVVm_E00m4e17q_6z8';
 const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const STATUS_LABEL = { pending:'處理中', success:'採購成功', outofstock:'斷貨', shipped:'已出貨' };
-const STATUS_COLOR = { pending:'#A0A0B8', success:'#2E7D32', outofstock:'#D64045', shipped:'#1565C0' };
-const STATUS_BG = { pending:'#F0F0F8', success:'#E8F5E9', outofstock:'#FFEBEE', shipped:'#E3F2FD' };
+const STATUS_LABEL = { pending:'處理中', success:'採購成功', outofstock:'斷貨', preparing:'出貨準備中', done:'已完成' };
+const STATUS_COLOR = { pending:'#A0A0B8', success:'#2E7D32', outofstock:'#D64045', preparing:'#E65100', done:'#1565C0' };
+const STATUS_BG = { pending:'#F0F0F8', success:'#E8F5E9', outofstock:'#FFEBEE', preparing:'#FFF3E0', done:'#E3F2FD' };
 
 let itemCount = 0;
 let itemImages = {};
@@ -278,11 +278,7 @@ function backToForm() {
   document.getElementById('stage-confirm').style.display = 'none';
 }
 
-function generateOrderNo() {
-  const d = new Date().toISOString().slice(0,10).replace(/-/g,'');
-  const r = Math.floor(Math.random()*900+100);
-  return `CC${d}-${r}`;
-}
+
 
 async function submitOrder() {
   const btn = document.getElementById('confirm-btn');
@@ -290,8 +286,8 @@ async function submitOrder() {
   const nickname = document.getElementById('f-nickname').value.trim();
   const phone = document.getElementById('f-phone').value.trim();
   const items = getItems();
-  const order_no = generateOrderNo();
-  const { data: customer, error: cErr } = await sb.from('customers').insert([{ order_no, nickname, phone }]).select().single();
+  // 訂單編號由出貨單生成
+  const { data: customer, error: cErr } = await sb.from('customers').insert([{ nickname, phone }]).select().single();
   if (cErr) { alert('送出失敗：' + cErr.message); btn.disabled = false; btn.textContent = '確認送出 ✓'; return; }
   for (const it of items) {
     let image_url = '';
@@ -306,7 +302,7 @@ async function submitOrder() {
     }
     await sb.from('order_items').insert([{ customer_id: customer.id, order_no, name: it.name, size: it.size, qty: it.qty, price_jpy: it.price_jpy, price_twd: it.price_twd||0, vendor: it.vendor||'', note: it.note, image_url }]);
   }
-  document.getElementById('done-order-no').textContent = `訂單編號：${order_no}`;
+  document.getElementById('done-order-no').textContent = '訂單已成功送出！工作人員將盡快處理';
   document.getElementById('stage-confirm').style.display = 'none';
   document.getElementById('stage-done').style.display = 'block';
   btn.disabled = false; btn.textContent = '確認送出 ✓';
@@ -334,7 +330,11 @@ async function queryOrders() {
   const allItems = await Promise.all(customers.map(c => sb.from('order_items').select('*').eq('customer_id', c.id)));
   results.innerHTML = customers.map((c, idx) => {
     const items = allItems[idx]?.data || [];
-    const itemsTotal = items.reduce((s, it) => s + (it.price_jpy * (it.rate||0) * it.qty), 0);
+    const itemsTotal = items.reduce((s, it) => {
+      if (it.status === 'outofstock') return s;
+      const twd = (it.price_twd && it.price_twd > 0) ? it.price_twd : (it.price_jpy * (it.rate||0));
+      return s + twd * it.qty;
+    }, 0);
     const total = itemsTotal + (Number(c.shipping)||0) + (Number(c.extra)||0);
     return `<div class="order-card">
       <div class="order-header">
@@ -347,12 +347,12 @@ async function queryOrders() {
           <div style="font-size:12px;color:#6B6B80;margin-top:3px">${it.size?esc(it.size)+'　':''}數量：${it.qty}${it.price_jpy?'　¥'+it.price_jpy.toLocaleString():''}</div>
           <div style="margin-top:6px"><span class="status-badge" style="background:${STATUS_BG[it.status]||'#F0F0F8'};color:${STATUS_COLOR[it.status]||'#A0A0B8'}">${STATUS_LABEL[it.status]||'處理中'}</span></div>
         </div>
-        ${it.rate&&it.price_jpy?`<div style="font-weight:700;color:#1A1A2E;font-size:14px;flex-shrink:0">NT$${Math.round(it.price_jpy*it.rate*it.qty).toLocaleString()}</div>`:''}
+        ${it.status==='outofstock'?'<div style="color:#D64045;font-size:13px;font-weight:600;flex-shrink:0">不計費</div>':((it.price_twd>0?it.price_twd:(it.rate&&it.price_jpy?it.price_jpy*it.rate:0))>0?`<div style="font-weight:700;color:#1A1A2E;font-size:14px;flex-shrink:0">NT$${Math.round((it.price_twd>0?it.price_twd:it.price_jpy*it.rate)*it.qty).toLocaleString()}</div>`:'')}
       </div>`).join('')}
       <div class="order-footer">
         ${Number(c.shipping)>0?`<div class="footer-row"><span>運費</span><span>NT$${Number(c.shipping).toLocaleString()}</span></div>`:''}
         ${Number(c.extra)>0?`<div class="footer-row"><span>其他加價</span><span>NT$${Number(c.extra).toLocaleString()}</span></div>`:''}
-        ${total>0?`<div class="footer-total"><span>應付總金額</span><span style="color:#E8A87C">NT$${Math.round(total).toLocaleString()}</span></div>`:'<div style="font-size:13px;color:#A0A0B8;margin-top:6px">金額由工作人員確認後顯示</div>'}
+        ${total>0?`<div class="footer-total"><span>應付總金額</span><span style="color:#E8A87C">NT$${Math.round(total).toLocaleString()}</span></div>`:itemsTotal===0?'<div style="font-size:13px;color:#A0A0B8;margin-top:6px">金額由工作人員確認後顯示</div>':''}
       </div>
     </div>`;
   }).join('');
