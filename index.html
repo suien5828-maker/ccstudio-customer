@@ -300,7 +300,7 @@ async function submitOrder() {
         image_url = urlData.publicUrl;
       }
     }
-    await sb.from('order_items').insert([{ customer_id: customer.id, order_no, name: it.name, size: it.size, qty: it.qty, price_jpy: it.price_jpy, price_twd: it.price_twd||0, vendor: it.vendor||'', note: it.note, image_url }]);
+    await sb.from('order_items').insert([{ customer_id: customer.id, name: it.name, size: it.size, qty: it.qty, price_jpy: it.price_jpy, price_twd: it.price_twd||0, vendor: it.vendor||'', note: it.note, image_url }]);
   }
   document.getElementById('done-order-no').textContent = '訂單已成功送出！工作人員將盡快處理';
   document.getElementById('stage-confirm').style.display = 'none';
