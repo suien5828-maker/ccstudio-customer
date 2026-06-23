@@ -224,8 +224,9 @@ function removeImg(i) {
 
 function getItems() {
   const items = [];
-  document.querySelectorAll('[id^="item-"]').forEach(el => {
-    const i = el.id.split('-')[1];
+  document.querySelectorAll('#items-container > .card').forEach(el => {
+    const i = el.id ? el.id.split('-')[1] : null;
+    if (!i) return;
     const name = document.getElementById(`name-${i}`)?.value.trim();
     const qty = document.getElementById(`qty-${i}`)?.value.trim();
     if (name && qty) items.push({
